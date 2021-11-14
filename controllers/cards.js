@@ -5,7 +5,7 @@ const getErrors = (data) => {
 }
 
 module.exports.createCard = (req, res) => {
-  const { name, link } = req.query;
+  const { name, link } = req.body;
   const ownerId = req.user._id;
 
   Card.create({ name, link, owner: ownerId })
