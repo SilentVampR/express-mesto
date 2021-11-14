@@ -5,19 +5,19 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 2,
-    maxlength: 30
+    maxlength: 30,
   },
   about: {
     required: true,
     type: String,
     minlength: 2,
-    maxlength: 30
+    maxlength: 30,
   },
   avatar: {
     type: String,
     required: true,
-    minlength: 10
-  }
+    minlength: 10,
+  },
 });
 
-module.exports = mongoose.model('user', userSchema)
+module.exports = mongoose.model('user', userSchema);

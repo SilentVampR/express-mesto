@@ -4,7 +4,7 @@
   "description": "Mesto express version",
   "main": "app.js",
   "scripts": {
-    "lint": "npx eslint",
+    "lint": "npx eslint .",
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
@@ -30,6 +30,7 @@
     "nodemon": "^2.0.15"
   },
   "dependencies": {
+    "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "mongoose": "^6.0.12"
   }

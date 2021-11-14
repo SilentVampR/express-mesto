@@ -1,6 +1,5 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const path = require('path');
 const bodyParser = require('body-parser');
 
 // Импортируем маршруты
@@ -18,16 +17,17 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use((req, res, next) => {
   req.user = {
-    _id: '618f45c12a6abf6acc042a83'
+    _id: '618f45c12a6abf6acc042a83',
   };
   next();
 });
 
 app.use(userRoutes);
 app.use(cardRoutes);
-
-app.use(express.static(path.join(__dirname, 'public')))
+app.use((req, res) => res
+  .status(404)
+  .send({ message: 'Страница не найдена!' }));
 
 app.listen(PORT, () => {
   console.log(`Сервер запущен на порту номер ${PORT}`);
-})
+});
