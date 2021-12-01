@@ -1,6 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const {
+  createUser,
+  login,
+} = require('./controllers/users');
 
 // Импортируем маршруты
 const userRoutes = require('./routes/users');
@@ -21,7 +25,8 @@ app.use((req, res, next) => {
   };
   next();
 });
-
+app.post('/signup', createUser);
+app.post('/signin', login);
 app.use(userRoutes);
 app.use(cardRoutes);
 app.use((req, res) => res
@@ -29,5 +34,5 @@ app.use((req, res) => res
   .send({ message: 'Страница не найдена!' }));
 
 app.listen(PORT, () => {
-  console.log(`Сервер запущен на порту номер ${PORT}`);
+  console.log('Сервер запущен на порту', PORT);
 });

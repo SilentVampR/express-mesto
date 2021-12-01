@@ -1,23 +1,58 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+
+const SALT_ROUND = 10;
+const JWT_SECRET = 'some_secret';
 
 const getErrors = (data) => Object.values(data.errors).map((error) => error.message);
 
 module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
-    .then((user) => res
-      .status(201)
-      .send({ data: user }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
+  const {
+    name,
+    about,
+    avatar,
+    email,
+    password,
+  } = req.body;
+  if (!email || !password) {
+    return res.status(400).send({ message: 'Не все обязательные поля заполнены' });
+  }
+  return User.findOne({ email })
+    .then((user) => {
+      if (user) {
         return res
-          .status(400)
-          .send({ message: `Не все поля заполены корректно: ${getErrors(err)}` });
+          .status(409)
+          .send({ message: 'Пользователь с таким email уже зарегистрирован' });
+        // throw new error('Пользователь с таким email уже зарегистрирован');
       }
-      return res
-        .status(500)
-        .send({ message: `Ошибка обработки запроса: ${err}` });
-    });
+      return bcrypt.hash(password, SALT_ROUND);
+    })
+    .then((hash) => {
+      User.create({
+        name,
+        about,
+        avatar,
+        email,
+        password: hash,
+      })
+        .then((user) => res
+          .status(201)
+          .send({ data: user }))
+        .catch((err) => {
+          if (err.name === 'ValidationError') {
+            return res
+              .status(400)
+              .send({ message: `Не все поля заполены корректно: ${getErrors(err)}` });
+          }
+          return res
+            .status(500)
+            .send({ message: `Ошибка обработки запроса: ${err}` });
+        });
+    })
+    .catch((err) => res
+      .status(500)
+      .send({ message: `Ошибка обработки запроса: ${err}` }));
 };
 
 module.exports.getUsers = (req, res) => {
@@ -94,7 +129,7 @@ module.exports.updateAvatar = (req, res) => {
     .then((user) => {
       if (!user) {
         return res
-          .status(404)
+          .status(401)
           .send({ message: 'Запрашиваемый пользователь не найден' });
       }
       return res
@@ -111,4 +146,46 @@ module.exports.updateAvatar = (req, res) => {
         .status(500)
         .send({ message: `Ошибка обработки запроса: ${err}` });
     });
+};
+
+module.exports.login = (req, res) => {
+  const {
+    email,
+    password,
+  } = req.body;
+
+  User.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        return res
+          .status(401)
+          .send({ message: 'Неверный логин или пароль 1' });
+      }
+      return bcrypt.compare(password, user.password)
+        .then((match) => {
+          if (!match) {
+            return res
+              .status(401)
+              .send({ message: 'Неверный логин или пароль 2' });
+          }
+          const token = jwt.sign({ _id: user._id }, JWT_SECRET);
+          return res
+            .status(200)
+            .cookie('jwt', token, {
+              maxAge: 3600000,
+              httpOnly: true,
+            })
+            .end();
+          // return res
+          //   .status(200)
+          //   .send({ _id: user._id });
+        })
+        .catch((err) => res
+          .status(500)
+          .send({ message: `Ошибка обработки запроса: ${err}` }));
+    })
+
+    .catch((err) => res
+      .status(500)
+      .send({ message: `Ошибка обработки запроса: ${err}` }));
 };
