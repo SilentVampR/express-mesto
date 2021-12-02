@@ -89,6 +89,30 @@ module.exports.getUserById = (req, res) => {
     });
 };
 
+module.exports.getMe = (req, res) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        return res
+          .status(404)
+          .send({ message: 'Запрашиваемый пользователь не найден' });
+      }
+      return res
+        .status(200)
+        .send({ data: user });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res
+          .status(400)
+          .send({ message: 'Некорректное значение ID пользователя' });
+      }
+      return res
+        .status(500)
+        .send({ message: `Ошибка обработки запроса: ${err}` });
+    });
+};
+
 module.exports.updateUser = (req, res) => {
   User.findByIdAndUpdate(req.user._id, {
     name: req.body.name,
@@ -154,7 +178,7 @@ module.exports.login = (req, res) => {
     password,
   } = req.body;
 
-  User.findOne({ email })
+  User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
         return res
@@ -168,17 +192,15 @@ module.exports.login = (req, res) => {
               .status(401)
               .send({ message: 'Неверный логин или пароль 2' });
           }
-          const token = jwt.sign({ _id: user._id }, JWT_SECRET);
+          const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
           return res
             .status(200)
             .cookie('jwt', token, {
               maxAge: 3600000,
               httpOnly: true,
             })
-            .end();
-          // return res
-          //   .status(200)
-          //   .send({ _id: user._id });
+            // .end();
+            .send({ jwt: token });
         })
         .catch((err) => res
           .status(500)

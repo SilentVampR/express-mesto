@@ -41,6 +41,13 @@ module.exports.deleteCard = (req, res) => {
           .status(404)
           .send({ message: 'Карточка с указанным _id не найдена' });
       }
+      if (card.owner._id !== req.user._id) {
+        console.log(card.owner._id);
+        console.log(req.user._id);
+        return res
+          .status(403)
+          .send({ message: 'Недостаточно прав для выполнения данного действия' });
+      }
       return res
         .status(202)
         .send({ data: card });
