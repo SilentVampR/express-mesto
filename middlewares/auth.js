@@ -1,31 +1,32 @@
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = 'some_secret';
+const { JWT_SECRET } = require('../config');
+const ForbiddenError = require('../errors/forbidden-err');
 
 module.exports.auth = (req, res, next) => {
   if (!req.cookies.jwt) {
-    return res.status(403).send({ message: 'Доступ запрещён 1' });
+    throw new ForbiddenError('Доступ запрещён');
   }
   const token = req.cookies.jwt;
   let payload;
   try {
     payload = jwt.verify(token, JWT_SECRET);
   } catch (e) {
-    return res.status(403).send({ message: 'Доступ запрещён 3' });
+    throw new ForbiddenError('Доступ запрещён');
   }
   /* const { authorization } = req.headers;
   if (!authorization) {
-    return res.status(403).send({ message: 'Доступ запрещён 1' });
+    throw new ForbiddenError('Доступ запрещён');
   }
   const token = authorization.replace('Bearer ', '');
   if (!token && token !== 'Bearer ') {
-    return res.status(403).send({ message: 'Доступ запрещён 2' });
+    throw new ForbiddenError('Доступ запрещён');
   }
   let payload;
   try {
     payload = jwt.verify(token, JWT_SECRET);
   } catch (e) {
-    return res.status(403).send({ message: 'Доступ запрещён 3' });
+    return res.status(403).send({ message: 'Доступ запрещён 2' });
   }
    */
   req.user = payload;
