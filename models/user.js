@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
     minlength: 10,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
-      validator: (value) => validator.isURL(value, { protocols: ['http', 'https', 'ftp'], require_tld: true, require_protocol: true }),
+      validator: (value) => validator.isURL(value, { protocols: ['http', 'https'], require_tld: true, require_protocol: true }),
       message: 'Поле URL имеет неверный формат',
     },
   },
