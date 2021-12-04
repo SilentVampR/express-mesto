@@ -16,7 +16,6 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    minlength: 10,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
       validator: (value) => validator.isURL(value, { protocols: ['http', 'https'], require_tld: true, require_protocol: true }),
@@ -26,7 +25,6 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    minlength: 4,
     unique: true,
     validate: {
       validator: (v) => validator.isEmail(v),

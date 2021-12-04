@@ -5,9 +5,9 @@ const User = require('../models/user');
 const { SALT_ROUND, JWT_SECRET } = require('../config');
 
 const RequestError = require('../errors/request-err');
-const ConflictError = require('../errors/request-err');
-const NotFoundError = require('../errors/request-err');
-const AuthError = require('../errors/request-err');
+const ConflictError = require('../errors/conflict-err');
+const NotFoundError = require('../errors/not-found-err');
+const AuthError = require('../errors/auth-err');
 
 const getErrors = (data) => Object.values(data.errors).map((error) => error.message);
 
@@ -24,10 +24,10 @@ module.exports.createUser = (req, res, next) => {
   }
   return User.findOne({ email })
     .then((user) => {
-      if (user) {
-        throw new ConflictError('Пользователь с таким email уже зарегистрирован');
+      if (!user) {
+        return bcrypt.hash(password, SALT_ROUND);
       }
-      return bcrypt.hash(password, SALT_ROUND);
+      throw new ConflictError('Пользователь с таким email уже зарегистрирован');
     })
     .then((hash) => {
       User.create({
@@ -37,9 +37,13 @@ module.exports.createUser = (req, res, next) => {
         email,
         password: hash,
       })
-        .then((user) => res
-          .status(201)
-          .send({ data: user }))
+        .then((user) => {
+          const newUser = user.toObject();
+          delete newUser.password;
+          res
+            .status(201)
+            .send({ data: newUser });
+        })
         .catch((err) => {
           if (err.name === 'ValidationError') {
             next(new RequestError(`Не все поля заполены корректно: ${getErrors(err)}`));

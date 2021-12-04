@@ -1,7 +1,7 @@
 const Card = require('../models/card');
 
 const RequestError = require('../errors/request-err');
-const NotFoundError = require('../errors/request-err');
+const NotFoundError = require('../errors/not-found-err');
 const ForbiddenError = require('../errors/forbidden-err');
 
 const getErrors = (data) => Object.values(data.errors).map((error) => error.message);
