@@ -72,7 +72,12 @@ module.exports.getUserById = (req, res, next) => {
         .status(200)
         .send({ data: user });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new RequestError('Некорректное значение ID пользователя'));
+      }
+      next(err);
+    });
 };
 
 module.exports.getMe = (req, res, next) => {
