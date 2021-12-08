@@ -38,6 +38,7 @@ app.use(cors({
     'https://silentvampr.nomoredomains.work',
   ],
   credentials: true,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 }));
 
 app.post('/signup', celebrate({
