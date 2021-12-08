@@ -38,6 +38,7 @@ app.use(cors({
     'http://silentvampr.nomoredomains.work',
     'http://localhost:3000',
   ],
+  credentials: true,
   // methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 }));
 
