@@ -9,6 +9,8 @@ const {
   login,
 } = require('./controllers/users');
 
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+
 const NotFoundError = require('./errors/not-found-err');
 
 // Импортируем маршруты
@@ -20,7 +22,10 @@ const { PORT = 3000 } = process.env;
 
 const app = express();
 
-app.use(cookieParser());
+app.use(requestLogger); // Логгер запросов
+
+app.use(cookieParser()); // Работа с cookie
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -50,6 +55,8 @@ app.use(() => {
 
 app.use(errors());
 
+app.use(errorLogger);
+
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res
@@ -63,5 +70,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log('Сервер запущен на порту', PORT);
+  // console.log('Сервер запущен на порту', PORT);
 });
