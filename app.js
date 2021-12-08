@@ -37,7 +37,6 @@ app.use(cors({
     'https://silentvampr.nomoredomains.work',
     'http://silentvampr.nomoredomains.work',
   ],
-  credentials: true,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 }));
 
