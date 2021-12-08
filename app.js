@@ -36,8 +36,9 @@ app.use(cors({
   origin: [
     'https://silentvampr.nomoredomains.work',
     'http://silentvampr.nomoredomains.work',
+    'http://localhost:3000',
   ],
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  // methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 }));
 
 app.post('/signup', celebrate({
