@@ -167,8 +167,6 @@ module.exports.login = (req, res, next) => {
             .cookie('jwt', token, {
               maxAge: 7 * 24 * 60 * 60 * 1000, // 7 дней в мс
               httpOnly: true,
-              sameSite: 'None',
-              secure: true,
             })
             .end();
         })
