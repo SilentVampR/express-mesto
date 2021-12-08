@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
 
@@ -30,6 +31,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
+
+app.use(cors({
+  origin: [
+    'https://silentvampr.nomoredomains.work',
+    'https://silentvampr.nomoredomains.work',
+  ],
+  credentials: true,
+}));
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
