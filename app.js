@@ -35,7 +35,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 app.use(cors({
   origin: [
     'https://silentvampr.nomoredomains.work',
-    'https://silentvampr.nomoredomains.work',
+    'http://silentvampr.nomoredomains.work',
   ],
   credentials: true,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
