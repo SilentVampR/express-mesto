@@ -169,7 +169,7 @@ module.exports.login = (req, res, next) => {
               httpOnly: true,
               // sameSite: true,
               sameSite: 'none',
-              // secure: true,
+              secure: true,
             })
             .send({ email });
           // .end();
