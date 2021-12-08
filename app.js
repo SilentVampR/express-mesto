@@ -40,6 +40,7 @@ app.use(cors({
   ],
   credentials: true,
   methods: 'GET, PATCH, POST, DELETE',
+  preflightContinue: true,
 }));
 
 app.post('/signup', celebrate({
