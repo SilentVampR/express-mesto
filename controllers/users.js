@@ -184,14 +184,9 @@ module.exports.login = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.logout = (req, res, next) => res
+module.exports.logout = (req, res) => res
   .status(200)
-  .cookie('jwt', '', {
-    maxAge: 0,
-    httpOnly: true,
-    // sameSite: true,
-    sameSite: 'none',
-    secure: true,
+  .clearCookie('jwt', {
+    path: '/',
   })
-  .send({ message: 'Осуществлен выход из приложения' })
-  .catch(next);
+  .end();
