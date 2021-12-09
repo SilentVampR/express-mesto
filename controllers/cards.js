@@ -11,7 +11,6 @@ module.exports.createCard = (req, res, next) => {
   const ownerId = req.user._id;
 
   Card.create({ name, link, owner: ownerId })
-    .populate(['owner', 'likes'])
     .then((card) => res
       .status(201)
       .send({ data: card }))
