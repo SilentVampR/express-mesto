@@ -8,6 +8,7 @@ const { celebrate, Joi, errors } = require('celebrate');
 const {
   createUser,
   login,
+  logout,
 } = require('./controllers/users');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -57,6 +58,7 @@ app.post('/signin', celebrate({
     password: Joi.string().required(),
   }),
 }), login);
+app.get('/signout', logout);
 app.use(auth);
 app.use(userRoutes);
 app.use(cardRoutes);
