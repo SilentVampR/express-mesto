@@ -40,7 +40,7 @@ app.use(cors({
     'http://localhost:3000',
   ],
   credentials: true,
-  methods: 'GET, PATCH, POST, DELETE',
+  methods: 'GET, PUT, PATCH, POST, DELETE',
 }));
 
 app.post('/signup', celebrate({
