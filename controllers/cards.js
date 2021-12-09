@@ -25,7 +25,7 @@ module.exports.createCard = (req, res, next) => {
 module.exports.getCards = (req, res, next) => {
   Card.find({
     order: [
-      ['createdAt', 'ASC'],
+      ['createdAt', 'DESC'],
     ],
   })
     .populate(['owner', 'likes'])
