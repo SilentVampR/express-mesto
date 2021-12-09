@@ -70,7 +70,7 @@ module.exports.getUserById = (req, res, next) => {
       }
       return res
         .status(200)
-        .send({ user });
+        .send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -88,7 +88,7 @@ module.exports.getMe = (req, res, next) => {
       }
       return res
         .status(200)
-        .send({ user });
+        .send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -112,7 +112,7 @@ module.exports.updateUser = (req, res, next) => {
       }
       return res
         .status(202)
-        .send({ user });
+        .send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -135,7 +135,7 @@ module.exports.updateAvatar = (req, res, next) => {
       }
       return res
         .status(202)
-        .send({ user });
+        .send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
