@@ -2,12 +2,12 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-const { SALT_ROUND, JWT_SECRET } = require('../config');
-
 const RequestError = require('../errors/request-err');
 const ConflictError = require('../errors/conflict-err');
 const NotFoundError = require('../errors/not-found-err');
 const AuthError = require('../errors/auth-err');
+
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 const getErrors = (data) => Object.values(data.errors).map((error) => error.message);
 
@@ -25,7 +25,7 @@ module.exports.createUser = (req, res, next) => {
   return User.findOne({ email })
     .then((user) => {
       if (!user) {
-        return bcrypt.hash(password, SALT_ROUND);
+        return bcrypt.hash(password, 10);
       }
       throw new ConflictError('Пользователь с таким email уже зарегистрирован');
     })
@@ -161,7 +161,11 @@ module.exports.login = (req, res, next) => {
           if (!match) {
             throw new AuthError('Неверный логин или пароль');
           }
-          const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
+          const token = jwt.sign(
+            { _id: user._id },
+            NODE_ENV === 'production' ? JWT_SECRET : 'some-dev-secret',
+            { expiresIn: '7d' },
+          );
           return res
             .status(200)
             .cookie('jwt', token, {

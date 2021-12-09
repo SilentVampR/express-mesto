@@ -1,6 +1,7 @@
+const { NODE_ENV, JWT_SECRET } = process.env;
 const jwt = require('jsonwebtoken');
 
-const { JWT_SECRET } = require('../config');
+const secret = NODE_ENV === 'production' ? JWT_SECRET : 'some-dev-secret';
 
 const AuthError = require('../errors/auth-err');
 
@@ -11,7 +12,7 @@ module.exports.auth = (req, res, next) => {
   const token = req.cookies.jwt;
   let payload;
   try {
-    payload = jwt.verify(token, JWT_SECRET);
+    payload = jwt.verify(token, secret);
   } catch (e) {
     throw new AuthError('Ошибка авторизации');
   }
@@ -25,7 +26,7 @@ module.exports.auth = (req, res, next) => {
   }
   let payload;
   try {
-    payload = jwt.verify(token, JWT_SECRET);
+    payload = jwt.verify(token, secret);
   } catch (e) {
     return res.status(403).send({ message: 'Доступ запрещён 2' });
   }
