@@ -189,5 +189,5 @@ module.exports.logout = (req, res, next) => res
     sameSite: 'none',
     secure: true,
   })
-  .end()
+  .send({ message: 'Осуществлен выход из приложения' })
   .catch(next);
