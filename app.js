@@ -43,6 +43,11 @@ app.use(cors({
   credentials: true,
   methods: 'GET, PUT, PATCH, POST, DELETE',
 }));
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
