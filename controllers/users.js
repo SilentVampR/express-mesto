@@ -189,4 +189,4 @@ module.exports.logout = (req, res) => res
   .clearCookie('jwt', {
     path: '/',
   })
-  .end();
+  .send({ message: 'Осуществлен выход из приложения' });
