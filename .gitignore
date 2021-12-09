@@ -3,6 +3,9 @@ logs
 *.log
 npm-debug.log*
 
+#config
+.env
+
 # Dependency directory
 node_modules
 frontend
