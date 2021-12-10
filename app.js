@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
 const helmet = require('helmet');
 
-const { corsConfig } = require('./middlewares/corsConfig');
+const { corsConfig } = require('./middlewares/corsconfig');
 
 const {
   createUser,
@@ -15,6 +15,7 @@ const {
 } = require('./controllers/users');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { errorHandler } = require('./middlewares/errorhandler');
 
 const NotFoundError = require('./errors/not-found-err');
 
@@ -74,17 +75,7 @@ app.use(errorLogger);
 
 app.use(errors());
 
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? `На сервере произошла ошибка ${err}`
-        : message,
-    });
-  next();
-});
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   // console.log('Сервер запущен на порту', PORT);
