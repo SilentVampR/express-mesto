@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
+const helmet = require('helmet');
 
 const { corsConfig } = require('./middlewares/corsConfig');
 
@@ -29,6 +30,9 @@ const app = express();
 app.use(requestLogger); // Логгер запросов
 
 app.use(cookieParser()); // Работа с cookie
+
+app.use(helmet()); // Активируем helmet
+app.disable('x-powered-by'); // Отключаем заголовок принадлежности
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
