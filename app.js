@@ -2,9 +2,10 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
+
+const { corsConfig } = require('./middlewares/corsConfig');
 
 const {
   createUser,
@@ -34,15 +35,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
-app.use(cors({
-  origin: [
-    'https://silentvampr.nomoredomains.work',
-    'http://silentvampr.nomoredomains.work',
-    'http://localhost:3000',
-  ],
-  credentials: true,
-  methods: 'GET, PUT, PATCH, POST, DELETE',
-}));
+app.use(corsConfig);
+
 app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
